@@ -1,0 +1,71 @@
+Sub AllStockAnalysis()
+Worksheets("All Stock Analysis").Activate
+
+    Range("A1").Value = "All Stocks 2018"
+    
+    
+    'create header row
+    Cells(3, 1).Value = "Ticker"
+    Cells(3, 2).Value = "Total Daily Volume"
+    Cells(3, 3).Value = "Return"
+    
+    'create tickers array Dim, ticker ranger(0 to 11)= 12items , datatype=str
+    Dim tickers(11) As String
+    tickers(0) = "AY"
+    tickers(1) = "CSIQ"
+    tickers(2) = "DQ"
+    tickers(3) = "ENPH"
+    tickers(4) = "FSLR"
+    tickers(5) = "HASI"
+    tickers(6) = "JKS"
+    tickers(7) = "RUN"
+    tickers(8) = "SEDG"
+    tickers(9) = "SPWR"
+    tickers(10) = "TERP"
+    tickers(11) = "VSLR"
+    
+    'initialize variables
+    Dim startingPrice As Double
+    Dim closingPrice As Double
+    
+    
+    
+    'Activate worksheet, and find rows in worksheets
+    Worksheets("2018").Activate
+    RowCount = Cells(Rows.Count, "A").End(xlUp).Row
+    
+    ' start outer loop
+    For i = 0 To 11
+        ticker = tickers(i)
+        totalVolume = 0
+        
+        'start inner loop
+        Worksheets("2018").Activate
+        For j = 2 To RowCount
+        'remember j is now loop iterating over rows so replace i with j in copied code
+        ' replace "DQ" with ticker
+        
+         If Cells(j, 1).Value = ticker Then
+         ' forgot to change the iterator in totalVolume code took 20 mins to spot.
+         
+            totalVolume = totalVolume + Cells(j, 8).Value
+        End If
+        
+          If Cells(j, 1).Value = ticker And Cells(j - 1, 1).Value <> ticker Then
+            startingPrice = Cells(j, 6).Value
+        End If
+        
+         If Cells(j, 1).Value = ticker And Cells(j + 1, 1).Value <> ticker Then
+            closingPrice = Cells(j, 6).Value
+        End If
+        
+     Next j
+        
+	
+         Worksheets("All Stock Analysis").Activate
+    Cells(4 + i, 1).Value = "2018"
+    Cells(4 + i, 2).Value = totalVolume
+    Cells(4 + i, 3).Value = closingPrice / startingPrice - 1
+    Next i
+
+End Sub
