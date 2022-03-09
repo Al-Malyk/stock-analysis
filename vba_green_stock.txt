@@ -1,7 +1,18 @@
 Sub AllStockAnalysis()
 Worksheets("All Stock Analysis").Activate
 
-    Range("A1").Value = "All Stocks 2018"
+'variables to calculate how long it takes code to run
+Dim startTime As Single
+Dim endTime As Single
+
+
+yearValue = InputBox("What year would you like to run the analysis on?")
+    'yearValue must be defined before it's used in the code.
+    
+startTime = Timer
+
+
+    Range("A1").Value = "All Stocks (" + yearValue + ")"
     
     
     'create header row
@@ -33,7 +44,7 @@ Worksheets("All Stock Analysis").Activate
     
     
     'Activate worksheet, and find rows in worksheets
-    Worksheets("2018").Activate
+    Sheets(yearValue).Activate
     RowCount = Cells(Rows.Count, "A").End(xlUp).Row
     
     ' start outer loop
@@ -42,7 +53,7 @@ Worksheets("All Stock Analysis").Activate
         totalVolume = 0
         
         'start inner loop
-        Worksheets("2018").Activate
+        Sheets(yearValue).Activate
         For j = 2 To RowCount
         'remember j is now loop iterating over rows so replace i with j in copied code
         ' replace "DQ" with ticker
@@ -69,13 +80,15 @@ Worksheets("All Stock Analysis").Activate
     Cells(4 + i, 3).Value = closingPrice / startingPrice - 1
     Cells(4 + i, 4).Value = ticker
     
-        
     Next i
+     endTime = Timer
+    
+    MsgBox "This code ran in " & (endTime - startTime) & " for the year " & (yearValue)
 
 End Sub
 
 Sub FormatAllStockAnalysisTable()
-    Worksheets("All Stock Analysis").Activate
+    Sheets("All Stock Analysis").Activate ' checking if sheets work.
     
     'header range bold font and change borders
     Range("A3:D3").Font.Bold = True
@@ -84,8 +97,8 @@ Sub FormatAllStockAnalysisTable()
     'testing
     'range("C:C") = Entire col C
     Range("C:C").Font.Bold = True
-    Range("B6").Font.Italic = True 'no particular reason for this
-    Range("C7,C11").Font.Size = 15
+   ' Range("B6").Font.Italic = True 'no particular reason for this
+   ' Range("C7,C11").Font.Size = 15 took this off because it looks horrible with WS 2017
     
     
     Range("B:B").NumberFormat = "#,##0" ' format for seperating numbers with comma
@@ -116,3 +129,10 @@ Sub FormatAllStockAnalysisTable()
     
 
 End Sub
+
+Sub clearsheet()
+'Worksheets("All Stock Analysis").Activate
+Cells.Clear
+End Sub
+
+
